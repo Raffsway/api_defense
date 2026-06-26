@@ -92,6 +92,7 @@ cap = cv2.VideoCapture("http://servidor:8000/api/v1/cameras/1000040$1$0$0/stream
 ## Documentação
 
 - **Conhecimento de domínio** (endpoints, stack, criptografia, vídeo): [`knowledge/`](knowledge/README.md)
+- **Mapa cronológico do manual** (páginas + campos por etapa): [`knowledge/09_mapa_paginas_manual.md`](knowledge/09_mapa_paginas_manual.md)
 - **Documentação do código** (um doc por módulo): [`docs/code/`](docs/code/README.md)
 
 ## Decode por GPU (dezenas de câmeras)
