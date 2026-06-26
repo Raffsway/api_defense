@@ -43,6 +43,9 @@ class Settings:
     update_token_every_n_heartbeats: int = field(default_factory=lambda: int(_env("DEFENSE_UPDATE_TOKEN_EVERY", "60")))
     http_timeout: float = field(default_factory=lambda: float(_env("DEFENSE_HTTP_TIMEOUT", "15")))
     default_stream_type: str = field(default_factory=lambda: _env("DEFENSE_DEFAULT_STREAM_TYPE", "1"))
+    # Quando a StartVideo devolve varios enderecos RTSP (interno|publico), forca
+    # escolher o que contiver este host/IP. Vazio = prefere o DEFENSE_IP.
+    rtsp_host_override: str = field(default_factory=lambda: _env("RTSP_HOST_OVERRIDE", ""))
 
     # --- Streaming MJPEG ---
     stream_fps_limit: float = field(default_factory=lambda: float(_env("STREAM_FPS_LIMIT", "0")))

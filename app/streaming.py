@@ -55,7 +55,11 @@ class CameraStream:
     """Captura compartilhada de UMA camera (1 thread, N espectadores)."""
 
     MAX_CONSECUTIVE_FAILURES = 30
-    RECONNECT_BACKOFF = 2.0
+    RECONNECT_BACKOFF = 3.0
+    # Maximo de falhas seguidas ao (re)obter/abrir o stream antes de desistir.
+    # Evita "martelar" o Defense (que pode bloquear com code 2084) em caso de
+    # erro persistente; o stream encerra e o espectador e desconectado.
+    MAX_REACQUIRE_FAILURES = 4
 
     def __init__(
         self,
@@ -132,11 +136,19 @@ class CameraStream:
     # ----------------------- motor OpenCV (CPU) --------------------------- #
     def _run_opencv(self) -> None:
         encode_params = [int(cv2.IMWRITE_JPEG_QUALITY), self._jpeg_quality]
+        reacquire_failures = 0
         while self._running:
+            if reacquire_failures >= self.MAX_REACQUIRE_FAILURES:
+                logger.error("[%s] desistindo apos %d falhas (evita bloqueio).",
+                             self.channel_id, reacquire_failures)
+                self._running = False
+                break
             try:
                 rtsp_url = self._acquire_url()
             except Exception as exc:
-                logger.warning("[%s] falha ao obter RTSP: %s", self.channel_id, exc)
+                reacquire_failures += 1
+                logger.warning("[%s] falha ao obter RTSP (%d/%d): %s", self.channel_id,
+                               reacquire_failures, self.MAX_REACQUIRE_FAILURES, exc)
                 time.sleep(self.RECONNECT_BACKOFF)
                 continue
 
@@ -147,12 +159,15 @@ class CameraStream:
                 pass
 
             if not cap.isOpened():
-                logger.error("[%s] nao abriu o RTSP.", self.channel_id)
+                reacquire_failures += 1
+                logger.error("[%s] nao abriu o RTSP (%d/%d).", self.channel_id,
+                             reacquire_failures, self.MAX_REACQUIRE_FAILURES)
                 cap.release()
                 time.sleep(self.RECONNECT_BACKOFF)
                 continue
 
             logger.info("[%s] captura iniciada (opencv).", self.channel_id)
+            reacquire_failures = 0
             failures = 0
             while self._running:
                 if self._idle():
@@ -194,11 +209,19 @@ class CameraStream:
         return cmd
 
     def _run_ffmpeg(self) -> None:
+        reacquire_failures = 0
         while self._running:
+            if reacquire_failures >= self.MAX_REACQUIRE_FAILURES:
+                logger.error("[%s] desistindo apos %d falhas (evita bloqueio).",
+                             self.channel_id, reacquire_failures)
+                self._running = False
+                break
             try:
                 rtsp_url = self._acquire_url()
             except Exception as exc:
-                logger.warning("[%s] falha ao obter RTSP: %s", self.channel_id, exc)
+                reacquire_failures += 1
+                logger.warning("[%s] falha ao obter RTSP (%d/%d): %s", self.channel_id,
+                               reacquire_failures, self.MAX_REACQUIRE_FAILURES, exc)
                 time.sleep(self.RECONNECT_BACKOFF)
                 continue
 
@@ -209,10 +232,11 @@ class CameraStream:
                 )
             except FileNotFoundError:
                 logger.error("[%s] ffmpeg nao encontrado em '%s'.", self.channel_id, settings.ffmpeg_path)
-                time.sleep(self.RECONNECT_BACKOFF)
-                continue
+                self._running = False
+                break
 
             logger.info("[%s] captura iniciada (ffmpeg hwaccel=%s).", self.channel_id, settings.stream_hwaccel)
+            reacquire_failures = 0
             buf = bytearray()
             try:
                 while self._running:

@@ -220,9 +220,41 @@ class DefenseManager:
         if not url:
             raise DefenseError(f"StartVideo nao retornou url: {data}")
 
-        full_url = f"{url}?token={video_token}" if video_token else url
-        logger.info("RTSP gerada para canal %s", channel_id)
+        # O campo "url" pode trazer VARIOS enderecos separados por "|" (ex.: IP
+        # interno + IP publico/NAT). Tambem consideramos "url2" (endereco
+        # alternativo). Escolhemos um candidato unico e colamos o ?token nele.
+        candidates: list[str] = []
+        for raw in [url, payload.get("url2")]:
+            if raw:
+                candidates += [u.strip() for u in str(raw).split("|") if u.strip()]
+
+        chosen = self._choose_rtsp(candidates)
+        full_url = self._with_token(chosen, video_token)
+        logger.info("RTSP gerada para canal %s -> %s", channel_id, chosen)
         return full_url
+
+    def _choose_rtsp(self, candidates: list[str]) -> str:
+        """Escolhe o melhor endereco RTSP entre os candidatos.
+
+        Preferencia: (1) host == RTSP_HOST_OVERRIDE; (2) host == DEFENSE_IP (o
+        mesmo IP usado para falar com o Defense, normalmente alcancavel por quem
+        consome a API); (3) primeiro candidato.
+        """
+        if not candidates:
+            raise DefenseError("StartVideo nao retornou nenhum endereco RTSP.")
+        prefer = [h for h in (settings.rtsp_host_override, settings.defense_ip) if h]
+        for host in prefer:
+            for cand in candidates:
+                if host in cand:
+                    return cand
+        return candidates[0]
+
+    @staticmethod
+    def _with_token(rtsp_url: str, video_token: Optional[str]) -> str:
+        if not video_token:
+            return rtsp_url
+        sep = "&" if "?" in rtsp_url else "?"
+        return f"{rtsp_url}{sep}token={video_token}"
 
     # --------------------------- inventario --------------------------------- #
     async def list_cameras(self, online_only: bool = False) -> dict[str, Any]:

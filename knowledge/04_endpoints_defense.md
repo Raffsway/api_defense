@@ -66,6 +66,13 @@ Resposta (sucesso `code == 1000`):
 **URL RTSP final** = `url` + `?token=` + `token`. O token RTSP é de **uso único**
 e expira em ~30s sem uso.
 
+⚠️ **Múltiplos endereços:** em servidores com NAT, o campo `url` pode trazer
+**vários endereços separados por `|`** (ex.: `rtsp://IP_INTERNO...|rtsp://IP_PUBLICO...`),
+e ainda pode haver `url2` (alternativo). É preciso **separar por `|`**, escolher um
+e colar o `?token=` **nele** (não na string inteira). Esta API escolhe o endereço
+que contém o `DEFENSE_IP` (configurável via `RTSP_HOST_OVERRIDE`). Ver
+`DefenseManager._choose_rtsp` em `app/defense_client.py`.
+
 ## Códigos de retorno relevantes
 | Código | Significado |
 |---|---|

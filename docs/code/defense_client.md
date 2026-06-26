@@ -27,8 +27,11 @@ Executa o fluxo duplo sob `_login_lock`:
 Inicia/cancela a `asyncio.Task` de heartbeat em background.
 
 ### `async start_video(channel_id, stream_type=None) -> str`
-Chama `MTS.Video.StartVideo` e devolve a **URL RTSP completa**
-(`url + "?token=" + token`). Usa `_post_with_relogin` (re-login automático).
+Chama `MTS.Video.StartVideo` e devolve a **URL RTSP completa** com o token. Usa
+`_post_with_relogin` (re-login automático). O campo `url` pode conter **vários
+endereços separados por `|`** (interno|público) mais um `url2`; `_choose_rtsp`
+separa os candidatos e escolhe um (preferindo `RTSP_HOST_OVERRIDE`, senão o
+`DEFENSE_IP`), e `_with_token` cola o `?token=` no endereço escolhido.
 
 ### `async list_cameras(online_only=False) -> dict`
 Lista as câmeras agrupadas por unidade. Combina `GET /tree/deviceOrg` (mapa
