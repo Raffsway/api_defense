@@ -1,0 +1,25 @@
+# Reverse proxy HTTP/2 na frente da Middle-Layer.
+#
+# Por que: o navegador limita ~6 conexoes HTTP/1.1 por host, e cada camera
+# MJPEG (<img>) mantem 1 conexao aberta. Com HTTP/2 (multiplexado) varias
+# cameras abrem na mesma aba sem travar. HTTP/2 no navegador exige TLS, por isso
+# servimos HTTPS com a CA interna do Caddy ("tls internal").
+#
+# CADDY_HOST: defina no .env com o IP/hostname do servidor (ex.: 192.168.0.50)
+# para o certificado interno cobrir esse endereco. Default: localhost.
+
+{
+	auto_https disable_redirects
+	servers {
+		protocols h1 h2
+	}
+}
+
+# Emite cert interno cobrindo localhost E o host configurado (IP do servidor).
+localhost:8443, {$CADDY_HOST:localhost}:8443 {
+	tls internal
+	reverse_proxy api-defense:8000 {
+		# CRITICO p/ MJPEG: desliga o buffer, envia cada frame imediatamente.
+		flush_interval -1
+	}
+}

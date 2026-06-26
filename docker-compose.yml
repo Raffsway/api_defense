@@ -1,0 +1,44 @@
+services:
+  api-defense:
+    build: .
+    image: defense-yolo-api:latest
+    container_name: defense-yolo-api
+    restart: unless-stopped
+
+    # Carrega IP/porta/usuario/senha do Defense e demais configs do .env.
+    env_file:
+      - .env
+
+    # Acesso HTTP direto (para a equipe YOLO / clientes programaticos).
+    # Para o MURAL no navegador com muitas cameras, use o Caddy (HTTP/2) abaixo.
+    ports:
+      - "${API_PORT:-8000}:8000"
+
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0) if urllib.request.urlopen('http://localhost:8000/health').status==200 else sys.exit(1)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # Reverse proxy HTTP/2 (TLS) -- resolve o limite de ~6 conexoes do navegador,
+  # permitindo abrir 10+ cameras MJPEG na mesma aba.
+  caddy:
+    image: caddy:2
+    container_name: defense-yolo-caddy
+    restart: unless-stopped
+    depends_on:
+      - api-defense
+    environment:
+      # IP/hostname do servidor (p/ o cert interno cobrir). Defina no .env.
+      - CADDY_HOST=${CADDY_HOST:-localhost}
+    ports:
+      - "8443:8443"   # navegador: https://<host>:8443/
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

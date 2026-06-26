@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# Git / docs pesados (nao precisam ir para a imagem)
+.git/
+.gitignore
+docs/_extracted.txt
+docs/Defense API 3.2 2.pdf
+
+# Ambiente local (o .env e injetado via env_file, nao copiado para a imagem)
+.env

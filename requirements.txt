@@ -1,0 +1,18 @@
+# --- API / servidor ---
+fastapi>=0.115
+uvicorn[standard]>=0.34
+
+# --- Configuracao (.env) ---
+python-dotenv>=1.0
+
+# --- Comunicacao com o Defense IA ---
+httpx>=0.28
+
+# --- Criptografia (login RSA / MD5 / AES do Defense IA) ---
+pycryptodome>=3.21
+
+# --- Processamento de video (proxy RTSP -> MJPEG) ---
+# Observacao: caso so precise do endpoint /rtsp (retorno do link),
+# o opencv nao e obrigatorio. Ele so e usado no endpoint /stream.
+opencv-python-headless>=4.10
+numpy>=2.1

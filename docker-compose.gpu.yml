@@ -1,0 +1,26 @@
+# Override para decode acelerado por GPU (NVDEC) no Linux/WSL2.
+#
+# Requisitos no host:
+#   * Driver NVIDIA + NVIDIA Container Toolkit instalados.
+#   * (Windows) Docker Desktop com backend WSL2 e GPU habilitada.
+#
+# Uso:
+#   docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d --build
+#
+# Ativa o motor ffmpeg com hwaccel CUDA e expoe a GPU ao container.
+
+services:
+  api-defense:
+    environment:
+      - STREAM_ENGINE=ffmpeg
+      - STREAM_HWACCEL=cuda
+      # Capacidades necessarias p/ o NVDEC (libnvcuvid) dentro do container.
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=video,compute,utility
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu, video]
