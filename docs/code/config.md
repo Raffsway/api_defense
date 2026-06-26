@@ -21,7 +21,7 @@ ambiente / arquivo `.env`.
 | `defense_scheme` | `DEFENSE_SCHEME` | `http` | `http`/`https` |
 | `defense_username` | `DEFENSE_USERNAME` | `system` | Usuário |
 | `defense_password` | `DEFENSE_PASSWORD` | *(vazio)* | Senha |
-| `client_mac` | `DEFENSE_CLIENT_MAC` | `2C-F0-...` | MAC do "cliente" |
+| `client_mac` | `DEFENSE_CLIENT_MAC` | *(auto)* | MAC do "cliente". **Vazio = detecta o MAC da máquina** via `uuid.getnode()` (`_auto_mac()`). Nativo: MAC real da NIC; em Docker: MAC do container. Defina explicitamente se quiser um valor fixo/estável. |
 | `client_type` | `DEFENSE_CLIENT_TYPE` | `WINPC_V2` | Tipo de cliente |
 | `verify_tls` | `DEFENSE_VERIFY_TLS` | `true` | Verificar TLS |
 | `keepalive_interval` | `DEFENSE_KEEPALIVE_INTERVAL` | `22` | s entre heartbeats |

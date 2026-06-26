@@ -8,6 +8,7 @@ Veja docs/code/config.md para a documentacao completa.
 from __future__ import annotations
 
 import os
+import uuid
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -22,6 +23,16 @@ def _env(name: str, default: str = "") -> str:
     return os.environ.get(name, default)
 
 
+def _auto_mac() -> str:
+    """Detecta o MAC desta maquina (formato AA-BB-CC-DD-EE-FF, maiusculo).
+
+    Usado quando DEFENSE_CLIENT_MAC nao e informado no .env, para identificar o
+    cliente automaticamente em vez de um valor fixo.
+    """
+    node = uuid.getnode()
+    return "-".join(f"{(node >> shift) & 0xFF:02X}" for shift in range(40, -8, -8))
+
+
 @dataclass(frozen=True)
 class Settings:
     """Configuracao imutavel da aplicacao, derivada do ambiente/.env."""
@@ -34,7 +45,8 @@ class Settings:
     defense_password: str = field(default_factory=lambda: _env("DEFENSE_PASSWORD", ""))
 
     # --- Identificacao do cliente exigida pela API ---
-    client_mac: str = field(default_factory=lambda: _env("DEFENSE_CLIENT_MAC", "2C-F0-5D-4D-5E-DB"))
+    # Vazio no .env => detecta o MAC desta maquina automaticamente.
+    client_mac: str = field(default_factory=lambda: _env("DEFENSE_CLIENT_MAC") or _auto_mac())
     client_type: str = field(default_factory=lambda: _env("DEFENSE_CLIENT_TYPE", "WINPC_V2"))
     verify_tls: bool = field(default_factory=lambda: _env("DEFENSE_VERIFY_TLS", "true").lower() != "false")
 
