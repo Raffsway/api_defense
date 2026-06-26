@@ -57,10 +57,16 @@ Retorna o link RTSP direto da câmera.
   "rtsp_url": "rtsp://192.168.1.1:9100/vms/monitor/param/cameraid=1000040%240%26substream=1?token=2204"
 }
 ```
-Consumo no YOLO:
+⚠️ **Token de uso único / ~30s:** não copie/reuse o `rtsp_url`. Gere um token
+novo **a cada conexão**. Padrões de consumo (IA/VLC/ffmpeg) em
+[10_consumo_rtsp.md](10_consumo_rtsp.md).
+
+Consumo no YOLO (gerando token novo a cada reconexão):
 ```python
-import cv2
-cap = cv2.VideoCapture(rtsp_url, cv2.CAP_FFMPEG)
+import cv2, requests
+def fresh(): return requests.get(f"{API}/api/v1/cameras/{CH}/rtsp",
+                                 params={"stream_type":"2"}).json()["rtsp_url"]
+cap = cv2.VideoCapture(fresh(), cv2.CAP_FFMPEG)   # abrir imediatamente
 ```
 
 ## `GET /api/v1/cameras/{channel_id}/stream`

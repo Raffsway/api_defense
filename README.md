@@ -87,7 +87,9 @@ cap = cv2.VideoCapture("http://servidor:8000/api/v1/cameras/1000040$1$0$0/stream
 
 > `channel_id` = `channelCode` do Defense (ex.: `1000040$1$0$0`).
 > `stream_type`: `1` principal, `2` secundário (mais leve para inferência).
-> O token RTSP é de **uso único / ~30s**: para reconectar, chame de novo.
+> ⚠️ O token RTSP é de **uso único / ~30s** — **não reutilize o link**. Para só
+> visualizar, use `/stream` (sem login). Para IA/RTSP nativo, gere um token novo
+> a cada conexão. **Padrões de consumo:** [knowledge/10_consumo_rtsp.md](knowledge/10_consumo_rtsp.md).
 
 ## Documentação
 

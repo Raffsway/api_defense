@@ -103,7 +103,21 @@ class WebApplication:
                 default=None, description="1 = principal, 2 = secundario"
             ),
         ) -> JSONResponse:
-            """Retorna a URL RTSP direta da camera (com token de video embutido)."""
+            """Retorna a URL RTSP direta da câmera (token de vídeo embutido).
+
+            ⚠️ **Token de uso único:** o `rtsp_url` traz um token gerado pelo
+            Defense que é **válido para UMA conexão** e **expira em ~30s** sem
+            uso. Não dá para copiar/colar e reutilizar o link (um player como o
+            VLC pedirá usuário/senha quando o token vencer).
+
+            **Como consumir corretamente:**
+            - **Apenas visualizar** (VLC/navegador): use o endpoint `/stream`
+              (MJPEG) — a API renova o token a cada acesso, sem login.
+            - **Integração (IA/YOLO, NVR):** chame este endpoint **imediatamente
+              antes** de abrir o RTSP e, a **cada reconexão**, chame de novo para
+              obter um token novo. Veja o exemplo em
+              `knowledge/10_consumo_rtsp.md`.
+            """
             rtsp_url = await self._safe_start_video(channel_id, stream_type)
             return JSONResponse({"channel_id": channel_id, "rtsp_url": rtsp_url})
 
@@ -114,7 +128,14 @@ class WebApplication:
                 default=None, description="1 = principal, 2 = secundario"
             ),
         ) -> StreamingResponse:
-            """Proxy HTTP MJPEG usando captura compartilhada (1 decode por camera)."""
+            """Proxy HTTP MJPEG usando captura compartilhada (1 decode por câmera).
+
+            Forma **recomendada para apenas visualizar**: o link é **reutilizável**
+            e **não pede login** — a API gerencia o token de uso único do Defense
+            internamente. Abra direto no navegador ou em
+            `VLC → Abrir Fluxo de Rede`. Vários espectadores na mesma câmera
+            compartilham 1 conexão RTSP. Veja `knowledge/10_consumo_rtsp.md`.
+            """
             return StreamingResponse(
                 self.hub.mjpeg_stream(channel_id, stream_type),
                 media_type=self.hub.content_type,

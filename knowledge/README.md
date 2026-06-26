@@ -15,6 +15,7 @@ de 490 páginas do fabricante.
 | [07_multicamera_http2.md](07_multicamera_http2.md) | Várias câmeras numa aba via HTTP/2 (Caddy) |
 | [08_gpu_decode.md](08_gpu_decode.md) | Decode por GPU (NVDEC) e escala para dezenas de câmeras |
 | [09_mapa_paginas_manual.md](09_mapa_paginas_manual.md) | **Mapa cronológico**: páginas do manual + campos da API por etapa |
+| [10_consumo_rtsp.md](10_consumo_rtsp.md) | **Consumir RTSP corretamente** (token de uso único) + código p/ IA/VLC |
 
 > Fonte primária: manual **"Defense API 3.2"** (Intelbras / VMS platform),
 > seções 3.3.5 (criptografia), 4.2–4.3 (conexão e login) e 5.3 / 6.2.4.2 (vídeo).
