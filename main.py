@@ -1,4 +1,4 @@
-"""Entrypoint da Middle-Layer Defense IA -> YOLO.
+"""Entrypoint da Middle-Layer Defense IA -> Cliente.
 
 Uso:
     python main.py

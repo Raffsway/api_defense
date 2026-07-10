@@ -1,12 +1,12 @@
-# Defense IA → YOLO — Middle-Layer API
+# Defense IA → Cliente — Middle-Layer API
 
 Microsserviço **FastAPI (orientado a objetos)** que abstrai a complexidade da
 plataforma **Intelbras Defense IA 3.2** (login criptografado RSA/MD5/AES +
 gestão de sessão) e entrega o feed das câmeras de forma simples para a equipe
-que processa **YOLO**.
+cliente.
 
 ```
-Defense IA  ->  esta API  ->  YOLO
+Defense IA  ->  esta API  ->  Cliente
 ```
 
 ## Estrutura do projeto
@@ -40,7 +40,7 @@ DEFENSE_IP=192.168.1.1
 DEFENSE_PORT=80
 DEFENSE_USERNAME=system
 DEFENSE_PASSWORD=troque_aqui
-API_PORT=8000        # porta da NOSSA API (a que o YOLO acessa)
+API_PORT=8000        # porta da NOSSA API (a que o cliente acessa)
 ```
 
 ## 2. Instalar e rodar
@@ -112,6 +112,6 @@ Detalhes e ajustes em [knowledge/08_gpu_decode.md](knowledge/08_gpu_decode.md).
 
 ## Notas (RTX 4080)
 
-- `/rtsp` é o mais leve (decode roda no YOLO) — ideal para muitas câmeras.
+- `/rtsp` é o mais leve (decode roda no cliente) — ideal para muitas câmeras.
 - `/stream` com `STREAM_ENGINE=ffmpeg`+`cuda` move o decode para a GPU; ajuste
   `STREAM_SCALE_WIDTH` / `STREAM_OUTPUT_FPS` / `STREAM_JPEG_QUALITY` / `stream_type=2`.

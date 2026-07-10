@@ -45,4 +45,4 @@ Centraliza `manager.start_video()` e mapeia exceções para HTTP:
 - **Classe** em vez de globais soltas: estado (manager/streamer) encapsulado,
   fácil de instanciar em testes.
 - Dashboard servido como arquivo estático (sem template engine) — simples e leve.
-- Mapeamento explícito de erros dá respostas claras à equipe YOLO.
+- Mapeamento explícito de erros dá respostas claras à equipe cliente.

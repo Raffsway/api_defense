@@ -19,7 +19,7 @@ token fresco.
 ## Dois modos de consumo
 
 ### A) `/rtsp` — repassar o link (mais leve)
-A nossa API só devolve o `rtsp_url`. O decode roda no YOLO.
+A nossa API só devolve o `rtsp_url`. O decode roda no cliente.
 - Melhor para **muitas câmeras** (não consome CPU/GPU desta máquina).
 
 ### B) `/stream` — proxy MJPEG via OpenCV (captura compartilhada)

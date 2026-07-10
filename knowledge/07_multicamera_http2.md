@@ -27,7 +27,7 @@ cada frame MJPEG ser repassado imediatamente (sem isso o vídeo "engasga").
 | Acesso | URL | Uso |
 |---|---|---|
 | **Mural (navegador)** | `https://<host>:8443/` | Várias câmeras numa aba (HTTP/2) |
-| API direta (HTTP/1.1) | `http://<host>:8000/` | Equipe YOLO / clientes programáticos |
+| API direta (HTTP/1.1) | `http://<host>:8000/` | Equipe cliente / clientes programáticos |
 
 > Na primeira visita a `https://<host>:8443/`, aceite o aviso de certificado
 > (CA interna do Caddy). Opcional: instalar a raiz do Caddy (em

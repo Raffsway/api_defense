@@ -16,14 +16,14 @@
 | `numpy` | Dependência do OpenCV |
 
 > Se você só usar o endpoint `/rtsp` (retorno do link), o OpenCV/numpy são
-> opcionais — o decode roda no lado YOLO.
+> opcionais — o decode roda no lado cliente.
 
 ## Hardware
 
 - Servidor com **RTX 4080 16GB** roda isto com folga, inclusive fazendo proxy
   MJPEG de várias câmeras simultâneas.
 - Recomendações para muitas câmeras:
-  - Prefira `/rtsp` e deixe o decode no YOLO (mais leve para esta máquina).
+  - Prefira `/rtsp` e deixe o decode no cliente (mais leve para esta máquina).
   - Para `/stream`, ajuste `STREAM_FPS_LIMIT`, `STREAM_JPEG_QUALITY` e use
     `stream_type=2` (substream) quando full-res não for necessário.
 
@@ -48,6 +48,6 @@ uvicorn main:app --host 0.0.0.0 --port 8000
 
 | Porta | Quem | Configurável em |
 |---|---|---|
-| `8000` | Nossa API (YOLO acessa) | `.env` → `API_PORT` |
+| `8000` | Nossa API (cliente acessa) | `.env` → `API_PORT` |
 | `80` / `443` | Defense IA (HTTP/HTTPS) | `.env` → `DEFENSE_PORT` |
 | `9100` (ex.) | RTSP do Defense IA | definido pelo próprio Defense |

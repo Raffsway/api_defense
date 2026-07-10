@@ -1,4 +1,4 @@
-"""Pacote da Middle-Layer Defense IA -> YOLO.
+"""Pacote da Middle-Layer Defense IA -> Cliente.
 
 Modulos (todos orientados a objetos):
   * config          -> classe Settings (configuracao via .env)

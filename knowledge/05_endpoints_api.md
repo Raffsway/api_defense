@@ -1,4 +1,4 @@
-# 05 · Endpoints Externos (Equipe YOLO → Nossa API)
+# 05 · Endpoints Externos (Equipe Cliente → Nossa API)
 
 Base URL: `http://{API_HOST}:{API_PORT}` (ex.: `http://servidor:8000`).
 Definidos em `app/web.py` (`WebApplication`).
@@ -61,7 +61,7 @@ Retorna o link RTSP direto da câmera.
 novo **a cada conexão**. Padrões de consumo (IA/VLC/ffmpeg) em
 [10_consumo_rtsp.md](10_consumo_rtsp.md).
 
-Consumo no YOLO (gerando token novo a cada reconexão):
+Consumo no cliente (gerando token novo a cada reconexão):
 ```python
 import cv2, requests
 def fresh(): return requests.get(f"{API}/api/v1/cameras/{CH}/rtsp",
@@ -94,4 +94,4 @@ cap = cv2.VideoCapture("http://servidor:8000/api/v1/cameras/1000040$1$0$0/stream
 ## Observações importantes
 - O token RTSP é de **uso único / ~30s**: para reconectar, chame o endpoint de novo.
 - `channel_id` contém `$` — ao montar a URL no código, faça `encodeURIComponent`/quote.
-- Para inferência mais leve/rápida no YOLO, use `stream_type=2`.
+- Para inferência mais leve/rápida no cliente, use `stream_type=2`.

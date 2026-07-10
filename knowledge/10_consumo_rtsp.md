@@ -25,7 +25,7 @@ API; é o comportamento do Defense.
 | Objetivo | Endpoint | Token | Reutilizável? | Login? |
 |---|---|---|---|---|
 | Apenas **visualizar** (VLC, navegador, dashboard) | `/stream` (MJPEG) | a API gerencia | **Sim** | Não |
-| **Integração** que exige `rtsp://` (IA/YOLO, NVR, gravador) | `/rtsp` | uso único | Não | Só se vencer |
+| **Integração** que exige `rtsp://` (cliente, NVR, gravador) | `/rtsp` | uso único | Não | Só se vencer |
 
 ### Regra prática
 > Para **ver**, use `/stream`. Para **processar/gravar em RTSP nativo**, use
@@ -41,7 +41,7 @@ http://SEU_SERVIDOR:8000/api/v1/cameras/{channel_id}/stream?stream_type=2
 ```
 VLC: *Mídia → Abrir Fluxo de Rede* → cole a URL. Ou abra direto no navegador.
 
-### B) IA / YOLO consumindo RTSP nativo (Python + OpenCV)
+### B) Cliente consumindo RTSP nativo (Python + OpenCV)
 Gera um token novo a cada (re)conexão — este é o padrão correto:
 ```python
 import cv2, requests, time
@@ -68,7 +68,7 @@ while True:
         time.sleep(1)
         cap = open_capture()
         continue
-    # ... rodar a inferencia YOLO no frame ...
+    # ... rodar a inferencia do cliente no frame ...
 ```
 > ❌ **Errado:** guardar o `rtsp_url` em uma variável/config e reusar.
 > ✅ **Certo:** chamar `/rtsp` de novo a cada conexão/reconexão.

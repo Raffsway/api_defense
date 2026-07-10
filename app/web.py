@@ -113,7 +113,7 @@ class WebApplication:
             **Como consumir corretamente:**
             - **Apenas visualizar** (VLC/navegador): use o endpoint `/stream`
               (MJPEG) — a API renova o token a cada acesso, sem login.
-            - **Integração (IA/YOLO, NVR):** chame este endpoint **imediatamente
+            - **Integração (cliente/NVR):** chame este endpoint **imediatamente
               antes** de abrir o RTSP e, a **cada reconexão**, chame de novo para
               obter um token novo. Veja o exemplo em
               `knowledge/10_consumo_rtsp.md`.

@@ -1,15 +1,15 @@
 services:
   api-defense:
     build: .
-    image: defense-yolo-api:latest
-    container_name: defense-yolo-api
+    image: defense-api:latest
+    container_name: defense-api
     restart: unless-stopped
 
     # Carrega IP/porta/usuario/senha do Defense e demais configs do .env.
     env_file:
       - .env
 
-    # Acesso HTTP direto (para a equipe YOLO / clientes programaticos).
+    # Acesso HTTP direto (para o cliente / clientes programaticos).
     # Para o MURAL no navegador com muitas cameras, use o Caddy (HTTP/2) abaixo.
     ports:
       - "${API_PORT:-8000}:8000"
@@ -25,7 +25,7 @@ services:
   # permitindo abrir 10+ cameras MJPEG na mesma aba.
   caddy:
     image: caddy:2
-    container_name: defense-yolo-caddy
+    container_name: defense-caddy
     restart: unless-stopped
     depends_on:
       - api-defense

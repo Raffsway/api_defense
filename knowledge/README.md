@@ -1,4 +1,4 @@
-# Base de Conhecimento — Defense IA → YOLO Middle-Layer
+# Base de Conhecimento — Defense IA → Cliente Middle-Layer
 
 Esta pasta reúne, em Markdown, todo o conhecimento necessário para uma **IA**
 (ou um desenvolvedor) entender e operar este projeto sem precisar abrir o PDF
@@ -10,7 +10,7 @@ de 490 páginas do fabricante.
 | [02_stack.md](02_stack.md) | Stack tecnológica e requisitos |
 | [03_fluxo_autenticacao.md](03_fluxo_autenticacao.md) | Login duplo RSA/MD5/AES, keepalive, updateToken |
 | [04_endpoints_defense.md](04_endpoints_defense.md) | Endpoints internos (a nossa API → Defense IA) |
-| [05_endpoints_api.md](05_endpoints_api.md) | Endpoints externos (equipe YOLO → a nossa API) |
+| [05_endpoints_api.md](05_endpoints_api.md) | Endpoints externos (equipe cliente → a nossa API) |
 | [06_streaming_video.md](06_streaming_video.md) | RTSP, montagem da URL e proxy MJPEG |
 | [07_multicamera_http2.md](07_multicamera_http2.md) | Várias câmeras numa aba via HTTP/2 (Caddy) |
 | [08_gpu_decode.md](08_gpu_decode.md) | Decode por GPU (NVDEC) e escala para dezenas de câmeras |
