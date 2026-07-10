@@ -15,4 +15,6 @@ pycryptodome>=3.21
 # Observacao: caso so precise do endpoint /rtsp (retorno do link),
 # o opencv nao e obrigatorio. Ele so e usado no endpoint /stream.
 opencv-python-headless>=4.10
-numpy>=2.1
+# Pinado <2.2: a partir do NumPy 2.2 os wheels x86_64 exigem baseline x86-64-v2
+# (SSE4.2/POPCNT), que a CPU desta VM (Proxmox, cpu type conservador) nao suporta.
+numpy>=2.1,<2.2
